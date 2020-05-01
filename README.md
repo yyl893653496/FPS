@@ -1,39 +1,16 @@
 # FPS-Multiplayer
 
 #### 介绍
-{**以下是码云平台说明，您可以替换此简介**
-码云是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用码云实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+Hello ，在结 束上一系列的FPS教程后，我们得到了许多伙伴的认可。
+有了大家的支持我们更加有了动力去做这一切事情，所以我们将开启一个全新的系列‘多人FPS游戏’
+该教程是一个基于Unity和PUN2的多人游戏教程。
+该教程将向您展示如何使用PUN2开发一个属于自己的多人FPS游戏；在该教程中我们将学习许多重要的features、窍门，以更让您更好地了解和使用PUN进行多人游戏的开发。
 
 #### 软件架构
-软件架构说明
+本项目使用Unity+Photon PUN进行开发
 
-
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
 
 #### 使用说明
+本项目使用`Unity 2019.3.7f1`版本开发
+网络模块使用PUN2
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 码云特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
