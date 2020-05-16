@@ -3,7 +3,20 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - TP_Player
+  - FP_Player
+  - FX
+  - Glass
+  - Carpet
+  - Concrete
+  - Gravel
+  - Metal
+  - Rock
+  - Snow
+  - Water
+  - Wood
+  - Dirt
   layers:
   - Default
   - TransparentFX
@@ -13,8 +26,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - FP_View
+  - Items
   - 
   - 
   - 
