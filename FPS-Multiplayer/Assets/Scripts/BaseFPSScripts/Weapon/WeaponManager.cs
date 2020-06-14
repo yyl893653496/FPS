@@ -29,7 +29,7 @@ public class WeaponManager : MonoBehaviour
 
     private void UpdateAmmoInfo(int _ammo, int _remaningAmmo)
     {
-        if (AmmoCountTextLabel != null)
+        if (AmmoCountTextLabel)
             AmmoCountTextLabel.text = _ammo + "/" + _remaningAmmo;
     }
 

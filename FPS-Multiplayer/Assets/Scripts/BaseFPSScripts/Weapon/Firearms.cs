@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Scripts.Weapon
 {
-    public abstract class Firearms : MonoBehaviour, IWeapon
+    public abstract class Firearms : IWeapon
     {
         public GameObject BulletPrefab;
 
@@ -55,11 +55,16 @@ namespace Scripts.Weapon
         private Vector3 originalEyePosition;
         protected Transform gunCameraTransform;
 
+        protected void Start()
+        {
+
+        }
+
         protected virtual void Awake()
         {
             CurrentAmmo = AmmoInMag;
             CurrentMaxAmmoCarried = MaxAmmoCarried;
-            GunAnimator = GetComponent<Animator>();
+            //GunAnimator = GetComponent<Animator>();
             EyeOriginFOV = EyeCamera.fieldOfView;
             GunOriginFOV = GunCamera.fieldOfView;
             doAimCoroutine = DoAim();
@@ -69,7 +74,7 @@ namespace Scripts.Weapon
         }
 
 
-        public void DoAttack()
+        public override void DoAttack()
         {
             Shooting();
         }

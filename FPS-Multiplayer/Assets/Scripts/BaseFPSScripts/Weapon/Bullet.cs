@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
+using UnityTemplateProjects.MultiplayerScripts;
 using Random = UnityEngine.Random;
 
 namespace Scripts.Weapon
@@ -7,11 +12,9 @@ namespace Scripts.Weapon
     public class Bullet : MonoBehaviour
     {
         public float BulletSpeed;
-        public GameObject ImpactPrefab;
-        public ImpactAudioData ImpactAudioData;
+
         private Transform bulletTransform;
         private Vector3 prevPosition;
-
 
         private void Start()
         {
@@ -29,22 +32,26 @@ namespace Scripts.Weapon
                 (bulletTransform.position - prevPosition).normalized,
                 out RaycastHit tmp_Hit,
                 (bulletTransform.position - prevPosition).magnitude)) return;
-            var tmp_BulletEffect =
-                Instantiate(ImpactPrefab,
-                    tmp_Hit.point,
-                    Quaternion.LookRotation(tmp_Hit.normal, Vector3.up));
-            
-            Destroy(tmp_BulletEffect, 3);
 
             
-            //For Audio
-            var tmp_TagsWithAudio =
-                ImpactAudioData.ImpactTagsWithAudios.Find((_audioData) => _audioData.Tag.Equals(tmp_Hit.collider.tag));
-            if (tmp_TagsWithAudio == null) return;
-            int tmp_Length = tmp_TagsWithAudio.ImpactAudioClips.Count;
-            AudioClip tmp_AudioClip = tmp_TagsWithAudio.ImpactAudioClips[Random.Range(0, tmp_Length)];
-            AudioSource.PlayClipAtPoint(tmp_AudioClip, tmp_Hit.point);
+            if (tmp_Hit.collider.TryGetComponent(out IDamager tmp_Damager))
+            {
+                tmp_Damager.TakeDamage(10);
+            }
 
+
+            Dictionary<byte, object> tmp_HitData = new Dictionary<byte, object>();
+            tmp_HitData.Add(0, tmp_Hit.point);
+            tmp_HitData.Add(1, tmp_Hit.normal);
+            tmp_HitData.Add(2, tmp_Hit.collider.tag);
+
+
+            RaiseEventOptions tmp_RaiseEventOptions = new RaiseEventOptions() {Receivers = ReceiverGroup.All};
+            SendOptions tmp_SendOptions = SendOptions.SendReliable;
+            PhotonNetwork.RaiseEvent((byte) EventCode.HitObject, tmp_HitData, tmp_RaiseEventOptions, tmp_SendOptions);
+
+
+            Destroy(this.gameObject);
         }
     }
 }

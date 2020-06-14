@@ -1,7 +1,9 @@
-﻿namespace Scripts.Weapon
+﻿using UnityEngine;
+
+namespace Scripts.Weapon
 {
-   public interface IWeapon
-   {
-      void DoAttack();
-   }
+    public abstract class IWeapon : MonoBehaviour
+    {
+        public abstract void DoAttack();
+    }
 }

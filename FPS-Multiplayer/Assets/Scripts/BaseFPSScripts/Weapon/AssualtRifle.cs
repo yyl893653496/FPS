@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Scripts.Weapon
@@ -7,7 +8,6 @@ namespace Scripts.Weapon
     public class AssualtRifle : Firearms
     {
         private IEnumerator reloadAmmoCheckerCoroutine;
-       
 
 
         private FPMouseLook mouseLook;
@@ -17,7 +17,6 @@ namespace Scripts.Weapon
         {
             base.Awake();
             reloadAmmoCheckerCoroutine = CheckReloadAmmoAnimationEnd();
-            
             mouseLook = FindObjectOfType<FPMouseLook>();
         }
 
@@ -36,7 +35,8 @@ namespace Scripts.Weapon
 
             CreateBullet();
             CasingParticle.Play();
-            mouseLook.FiringForTest();
+            if (mouseLook)
+                mouseLook.FiringForTest();
             LastFireTime = Time.time;
         }
 
@@ -66,59 +66,6 @@ namespace Scripts.Weapon
             }
         }
 
-//        protected override void Aim()
-//        {
-//            GunAnimator.SetBool("Aim", IsAiming);
-//            if (doAimCoroutine == null)
-//            {
-//                doAimCoroutine = DoAim();
-//                StartCoroutine(doAimCoroutine);
-//            }
-//            else
-//            {
-//                StopCoroutine(doAimCoroutine);
-//                doAimCoroutine = null;
-//                doAimCoroutine = DoAim();
-//                StartCoroutine(doAimCoroutine);
-//            }
-//        }
-
-
-//        private void Update()
-//        {
-//            if (Input.GetMouseButton(0))
-//            {
-//                DoAttack();
-//                //HoldTrigger();
-//            }
-//
-//            if (Input.GetMouseButtonUp(0))
-//            {
-//                //ReleaseTrigger();
-//            }
-//
-//
-//            if (Input.GetKeyDown(KeyCode.R))
-//            {
-//                Reload();
-//            }
-//
-//            if (Input.GetMouseButtonDown(1))
-//            {
-//                //TODO:瞄准
-//                IsAiming = true;
-//                Aim();
-//            }
-//
-//            if (Input.GetMouseButtonUp(1))
-//            {
-//                //TODO:退出瞄准
-//                IsAiming = false;
-//                Aim();
-//            }
-//        }
-
-
         private void CreateBullet()
         {
             GameObject tmp_Bullet = Instantiate(BulletPrefab, MuzzlePoint.position, MuzzlePoint.rotation);
@@ -126,11 +73,9 @@ namespace Scripts.Weapon
             tmp_Bullet.transform.eulerAngles += CalculateSpreadOffset();
 
             var tmp_BulletScript = tmp_Bullet.AddComponent<Bullet>();
-            tmp_BulletScript.ImpactPrefab = BulletImpactPrefab;
-            tmp_BulletScript.ImpactAudioData = ImpactAudioData;
+//            tmp_BulletScript.ImpactPrefab = BulletImpactPrefab;
+//            tmp_BulletScript.ImpactAudioData = ImpactAudioData;
             tmp_BulletScript.BulletSpeed = 500;
         }
-
-
     }
 }

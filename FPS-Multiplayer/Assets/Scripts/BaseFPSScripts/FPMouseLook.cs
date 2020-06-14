@@ -10,7 +10,7 @@ public class FPMouseLook : MonoBehaviour
     public Vector2 MaxminAngle;
 
     private Transform cameraTransform;
-    private Vector3 cameraRotation;
+    public Vector3 CameraRotation;
 
 
     public AnimationCurve RecoilCurve;
@@ -34,19 +34,19 @@ public class FPMouseLook : MonoBehaviour
         var tmp_MouseY = Input.GetAxis("Mouse Y");
 
 
-        cameraRotation.y += tmp_MouseX * MouseSensitivity;
-        cameraRotation.x -= tmp_MouseY * MouseSensitivity;
+        CameraRotation.y += tmp_MouseX * MouseSensitivity;
+        CameraRotation.x -= tmp_MouseY * MouseSensitivity;
 
 
         CalculateRecoilOffset();
         
 
-        cameraRotation.y += currentRecoil.y;
-        cameraRotation.x -= currentRecoil.x;
+        CameraRotation.y += currentRecoil.y;
+        CameraRotation.x -= currentRecoil.x;
 
-        cameraRotation.x = Mathf.Clamp(cameraRotation.x, MaxminAngle.x, MaxminAngle.y);
-        characterTransform.rotation = Quaternion.Euler(0, cameraRotation.y, 0);
-        cameraTransform.rotation = Quaternion.Euler(cameraRotation.x, cameraRotation.y, 0);
+        CameraRotation.x = Mathf.Clamp(CameraRotation.x, MaxminAngle.x, MaxminAngle.y);
+        characterTransform.rotation = Quaternion.Euler(0, CameraRotation.y, 0);
+        cameraTransform.rotation = Quaternion.Euler(CameraRotation.x, CameraRotation.y, 0);
     }
 
 

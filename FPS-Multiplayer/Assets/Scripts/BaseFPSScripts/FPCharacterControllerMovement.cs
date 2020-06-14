@@ -8,6 +8,7 @@ public class FPCharacterControllerMovement : MonoBehaviour
 {
     private CharacterController characterController;
     [SerializeField] private Animator characterAnimator;
+    [SerializeField] private Animator tp_CharacterAnimator;
     private Vector3 movementDirection;
     private Transform characterTransform;
     private float velocity;
@@ -60,6 +61,7 @@ public class FPCharacterControllerMovement : MonoBehaviour
             {
                 movementDirection.y = JumpHeight;
             }
+
             if (Input.GetKeyDown(KeyCode.C))
             {
                 var tmp_CurrentHeight = isCrouched ? originHeight : CrouchHeight;
@@ -68,19 +70,28 @@ public class FPCharacterControllerMovement : MonoBehaviour
                     StopCoroutine(crouchCoroutine);
                     crouchCoroutine = null;
                 }
-                
+
                 crouchCoroutine = DoCrouch(tmp_CurrentHeight);
                 StartCoroutine(crouchCoroutine);
                 isCrouched = !isCrouched;
             }
 
             if (characterAnimator != null)
+            {
                 characterAnimator.SetFloat("Velocity",
                     CurrentSpeed * movementDirection.normalized.magnitude,
                     0.25f,
                     Time.deltaTime);
+
+                tp_CharacterAnimator.SetFloat("Velocity",
+                    CurrentSpeed * movementDirection.normalized.magnitude,
+                    0.25f,
+                    Time.deltaTime);
+                tp_CharacterAnimator.SetFloat("Movement_X", tmp_Horizontal, 0.25f, Time.deltaTime);
+                tp_CharacterAnimator.SetFloat("Movement_Y", tmp_Vertical, 0.25f, Time.deltaTime);
+            }
         }
-        
+
 
         movementDirection.y -= Gravity * Time.deltaTime;
         var tmp_Movement = CurrentSpeed * Time.deltaTime * movementDirection;
