@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Artwork/Scenes/PhotomSample.unity
-    guid: dc2c682904296a844b0ae9ccc3af66de
+    path: Assets/Artwork/Scenes/LoginScene-Offline.unity
+    guid: 8faa11a5a15daf242a056f5b3edae50f
+  - enabled: 1
+    path: Assets/Artwork/Scenes/OnlineMap.unity
+    guid: a2d99e8ad8b5595479cdd4f77bbd7317
   m_configObjects: {}

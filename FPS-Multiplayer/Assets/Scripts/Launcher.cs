@@ -1,17 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
-    public InputField RoomName;
-
-    public string PlayerPrefabName;
     private bool connectedToMaster;
     private bool joinedRoom;
+
+
+    private void Awake()
+    {
+        ConnectToMaster();
+    }
+
 
     public void ConnectToMaster()
     {
@@ -20,11 +26,16 @@ public class Launcher : MonoBehaviourPunCallbacks
     }
 
 
-    public void CreateRoom()
+    public void CreateRoom(string _roomName, byte _playerCount, int _password, string _mapName)
     {
         if (!connectedToMaster || joinedRoom) return;
-        PhotonNetwork.CreateRoom(RoomName.text,
-            new RoomOptions() {MaxPlayers = 16, PublishUserId = true},
+
+        Hashtable tmp_RoomProperties = new Hashtable();
+        tmp_RoomProperties.Add("psw", _password);
+        tmp_RoomProperties.Add("Map", _mapName);
+        PhotonNetwork.CreateRoom(_roomName,
+            new RoomOptions()
+                {MaxPlayers = _playerCount, PublishUserId = true, CustomRoomProperties = tmp_RoomProperties},
             TypedLobby.Default);
     }
 
@@ -32,7 +43,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void JoinRoom()
     {
         if (!connectedToMaster || joinedRoom) return;
-        PhotonNetwork.JoinRoom(RoomName.text);
+        //PhotonNetwork.JoinRoom(RoomName.text);
     }
 
     public override void OnConnectedToMaster()
@@ -42,6 +53,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
+    public override void OnJoinedLobby()
+    {
+        base.OnJoinedLobby();
+        Debug.Log("Joined Lobby");
+    }
 
     public override void OnCreatedRoom()
     {
@@ -54,25 +70,15 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
         Debug.Log("Joined Room");
-        StartSpawn(0);
-        Player.Respawn += StartSpawn;
+        PhotonNetwork.LoadLevel(PhotonNetwork.CurrentRoom.CustomProperties["Map"].ToString());
+        
+//        StartSpawn(0);
+//        Player.Respawn += StartSpawn;
+
     }
 
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
-        Player.Respawn -= StartSpawn;
-    }
-
-    private void StartSpawn(float _timeToSpawn)
-    {
-        StartCoroutine(WaitToInstantiatePlayer(_timeToSpawn));
-    }
-
-
-    private IEnumerator WaitToInstantiatePlayer(float _timeToSpawn)
-    {
-        yield return new WaitForSeconds(_timeToSpawn);
-        PhotonNetwork.Instantiate(PlayerPrefabName, Vector3.zero, Quaternion.identity);
     }
 }

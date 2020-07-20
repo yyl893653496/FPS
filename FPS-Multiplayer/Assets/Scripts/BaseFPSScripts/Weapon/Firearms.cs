@@ -42,7 +42,7 @@ namespace Scripts.Weapon
 
         public int GetCurrentAmmo => CurrentAmmo;
         public int GetCurrentMaxAmmoCarried => CurrentMaxAmmoCarried;
-        
+
         protected int CurrentAmmo;
         protected int CurrentMaxAmmoCarried;
         protected float LastFireTime;
@@ -57,7 +57,6 @@ namespace Scripts.Weapon
 
         protected void Start()
         {
-
         }
 
         protected virtual void Awake()
@@ -65,11 +64,16 @@ namespace Scripts.Weapon
             CurrentAmmo = AmmoInMag;
             CurrentMaxAmmoCarried = MaxAmmoCarried;
             //GunAnimator = GetComponent<Animator>();
-            EyeOriginFOV = EyeCamera.fieldOfView;
-            GunOriginFOV = GunCamera.fieldOfView;
-            doAimCoroutine = DoAim();
-            gunCameraTransform = GunCamera.transform;
-            originalEyePosition = gunCameraTransform.localPosition;
+            if (EyeCamera)
+                EyeOriginFOV = EyeCamera.fieldOfView;
+            if (GunCamera)
+            {
+                GunOriginFOV = GunCamera.fieldOfView;
+                doAimCoroutine = DoAim();
+                gunCameraTransform = GunCamera.transform;
+                originalEyePosition = gunCameraTransform.localPosition;
+            }
+
             rigoutScopeInfo = BaseIronSight;
         }
 
@@ -105,7 +109,8 @@ namespace Scripts.Weapon
             while (true)
             {
                 yield return null;
-                GunStateInfo = GunAnimator.GetCurrentAnimatorStateInfo(2);
+
+                GunStateInfo = GunAnimator.GetCurrentAnimatorStateInfo(GunAnimator.GetLayerIndex("Reload Layer"));
                 if (GunStateInfo.IsTag("ReloadAmmo"))
                 {
                     if (GunStateInfo.normalizedTime >= 0.9f)

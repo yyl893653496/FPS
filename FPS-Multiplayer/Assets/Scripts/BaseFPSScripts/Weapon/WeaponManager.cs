@@ -1,10 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using Scripts.Items;
 using Scripts.Weapon;
 using UnityEngine;
 using UnityEngine.UI;
+
+[System.Serializable]
+public class WeaponInfo
+{
+    public int WeaponId;
+    public string WeaponName;
+    public Firearms FP_Weapon;
+    public Firearms TP_Weapon;
+}
+
 
 public class WeaponManager : MonoBehaviour
 {
@@ -14,12 +25,13 @@ public class WeaponManager : MonoBehaviour
 
     private Firearms carriedWeapon;
 
+    [SerializeField] private List<WeaponInfo> WeaponInfos;
 
     [SerializeField] private FPCharacterControllerMovement CharacterControllerMovement;
 
     private AnimatorStateInfo animationStateInfo;
     private IEnumerator waitingForHolsterEndCoroutine;
-
+    private PhotonView photonView;
 
     public List<Firearms> Arms = new List<Firearms>();
     public Transform WorldCameraTransform;
@@ -36,7 +48,11 @@ public class WeaponManager : MonoBehaviour
 
     private void Start()
     {
+        photonView = GetComponent<PhotonView>();
         Debug.Log($"Current weapon is null? {carriedWeapon == null}");
+
+        MainWeapon = photonView.IsMine ? WeaponInfos[0].FP_Weapon : WeaponInfos[0].TP_Weapon;
+
 
         if (MainWeapon)
         {
@@ -47,6 +63,7 @@ public class WeaponManager : MonoBehaviour
 
     private void Update()
     {
+        if (!photonView.IsMine) return;
         CheckItem();
 
         if (!carriedWeapon) return;
@@ -57,20 +74,23 @@ public class WeaponManager : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             //TODO:hold the Trigger
-            carriedWeapon.HoldTrigger();
+            //carriedWeapon.HoldTrigger();
+            photonView.RPC("RPC_HoldTrigger", RpcTarget.All);
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             //TODO: release the Trigger
-            carriedWeapon.ReleaseTrigger();
+            //carriedWeapon.ReleaseTrigger();
+            photonView.RPC("RPC_ReleaseTrigger", RpcTarget.All);
         }
 
 
         if (Input.GetKeyDown(KeyCode.R))
         {
             //TODO:Reloading the ammo
-            carriedWeapon.ReloadAmmo();
+            //carriedWeapon.ReloadAmmo();
+            photonView.RPC("RPC_ReloadAmmo", RpcTarget.All);
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -87,6 +107,7 @@ public class WeaponManager : MonoBehaviour
 
         UpdateAmmoInfo(carriedWeapon.GetCurrentAmmo, carriedWeapon.GetCurrentMaxAmmoCarried);
     }
+
 
     private void CheckItem()
     {
@@ -233,5 +254,23 @@ public class WeaponManager : MonoBehaviour
         carriedWeapon = _targetWeapon;
         carriedWeapon.gameObject.SetActive(true);
         CharacterControllerMovement.SetupAnimator(carriedWeapon.GunAnimator);
+    }
+
+    [PunRPC]
+    private void RPC_HoldTrigger()
+    {
+        carriedWeapon.HoldTrigger();
+    }
+
+    [PunRPC]
+    private void RPC_ReleaseTrigger()
+    {
+        carriedWeapon.ReleaseTrigger();
+    }
+
+    [PunRPC]
+    private void RPC_ReloadAmmo()
+    {
+        carriedWeapon.ReloadAmmo();
     }
 }
