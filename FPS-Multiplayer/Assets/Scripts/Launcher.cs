@@ -30,12 +30,15 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (!connectedToMaster || joinedRoom) return;
 
-        Hashtable tmp_RoomProperties = new Hashtable();
-        tmp_RoomProperties.Add("psw", _password);
-        tmp_RoomProperties.Add("Map", _mapName);
+        Hashtable tmp_RoomProperties = new Hashtable {{"psw", _password}, {"Map", _mapName}};
         PhotonNetwork.CreateRoom(_roomName,
-            new RoomOptions()
-                {MaxPlayers = _playerCount, PublishUserId = true, CustomRoomProperties = tmp_RoomProperties},
+            new RoomOptions
+            {
+                MaxPlayers = _playerCount,
+                PublishUserId = true,
+                CustomRoomProperties = tmp_RoomProperties,
+                CustomRoomPropertiesForLobby = new[] {"Map"}
+            },
             TypedLobby.Default);
     }
 
@@ -71,10 +74,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
         Debug.Log("Joined Room");
         PhotonNetwork.LoadLevel(PhotonNetwork.CurrentRoom.CustomProperties["Map"].ToString());
-        
+
 //        StartSpawn(0);
 //        Player.Respawn += StartSpawn;
-
     }
 
     public override void OnLeftRoom()

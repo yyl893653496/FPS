@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
+using UnityTemplateProjects.UI.Models;
+
 
 public class UIManager : MonoBehaviour
 {
+    public MapModelsScriptableObject MapModelsScriptableObject;
+
     public CanvasGroup MenuItemCanvasGroup;
     public Button PlayButton;
     public Button CreateGameButton;
@@ -26,6 +29,8 @@ public class UIManager : MonoBehaviour
     [Space] public Animator JoinGamePanelAnimator;
     public Button CancelJoinToCreateGameButton;
     public Button JoinToCreateGameButton;
+    public Image SelectedMapImage;
+    public Text SelectedRoomName;
 
     public Launcher Launcher;
 
@@ -55,6 +60,8 @@ public class UIManager : MonoBehaviour
         {
             JoinGamePanelAnimator.SetTrigger("FadeOut");
             MenuItemCanvasGroup.interactable = true;
+            SelectedRoomName.text = null;
+            SelectedMapImage.sprite = null;
         });
 
 
@@ -62,5 +69,17 @@ public class UIManager : MonoBehaviour
         {
             Launcher.CreateRoom(RoomName.text, (byte) (MaxPlayer.value), int.Parse(RoomPsw.text), MapName);
         });
+    }
+
+
+    public void SetSelectedRoomDetails(RoomInfo _roomInfo)
+    {
+        Assert.AreNotEqual(_roomInfo.CustomProperties.Count, 0);
+        var tmp_MatchedModel = MapModelsScriptableObject.MapModels.Find(_mapModel =>
+        {
+            return _mapModel.MapName.CompareTo(_roomInfo.CustomProperties["Map"]) == 0;
+        });
+        SelectedRoomName.text = _roomInfo.Name;
+        SelectedMapImage.sprite = tmp_MatchedModel.MapSprite;
     }
 }
