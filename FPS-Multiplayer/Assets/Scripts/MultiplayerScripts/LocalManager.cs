@@ -19,6 +19,8 @@ public class LocalManager : MonoBehaviour
         if (photonView.IsMine)
         {
             gameObject.AddComponent<AudioListener>();
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
             return;
         }
 

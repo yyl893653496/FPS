@@ -20,7 +20,8 @@ public class Player : MonoBehaviour, IDamager
         if (photonView.IsMine)
         {
             globalCamera = GameObject.FindWithTag("GlobalCamera");
-            globalCamera.SetActive(false);
+            if (globalCamera)
+                globalCamera.SetActive(false);
         }
     }
 

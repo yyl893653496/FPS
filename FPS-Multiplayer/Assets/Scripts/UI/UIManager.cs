@@ -1,4 +1,5 @@
-﻿using Photon.Realtime;
+﻿using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -33,6 +34,7 @@ public class UIManager : MonoBehaviour
     public Text SelectedRoomName;
 
     public Launcher Launcher;
+
 
     private void Start()
     {
@@ -69,6 +71,11 @@ public class UIManager : MonoBehaviour
         {
             Launcher.CreateRoom(RoomName.text, (byte) (MaxPlayer.value), int.Parse(RoomPsw.text), MapName);
         });
+        JoinToCreateGameButton.onClick.AddListener(() =>
+        {
+            if (string.IsNullOrEmpty(SelectedRoomName.text)) return;
+            PhotonNetwork.JoinRoom(SelectedRoomName.text);
+        });
     }
 
 
@@ -76,9 +83,7 @@ public class UIManager : MonoBehaviour
     {
         Assert.AreNotEqual(_roomInfo.CustomProperties.Count, 0);
         var tmp_MatchedModel = MapModelsScriptableObject.MapModels.Find(_mapModel =>
-        {
-            return _mapModel.MapName.CompareTo(_roomInfo.CustomProperties["Map"]) == 0;
-        });
+            _mapModel.MapName.CompareTo(_roomInfo.CustomProperties["Map"]) == 0);
         SelectedRoomName.text = _roomInfo.Name;
         SelectedMapImage.sprite = tmp_MatchedModel.MapSprite;
     }
